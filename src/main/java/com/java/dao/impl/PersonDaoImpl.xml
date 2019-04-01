@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java.dao.impl.PersonDaoImpl">
+
+    <!--
+        select标签：存放查询的sql语句
+            id属性：值唯一，一般情况下与dao的方法名保持一致
+            resultType属性：指定返回值类型
+    -->
+    <select id="getPersonById" parameterType="Map"  resultType="Map">
+        SELECT * FROM `persons` WHERE uName=#{uName} AND phone=#{phone}
+    </select>
+
+    <!--查询所有-->
+    <select id="getPersons" resultType="Map">
+        SELECT * FROM persons
+    </select>
+
+    <!--
+        insert标签、update标签、delete标签与select标签不同，没有resultType属性。
+        增删改的返回值固定就为int，代表影响的行数
+    -->
+    <insert id="insertPerson" parameterType="Map">
+        INSERT INTO `persons` VALUES(NULL,#{uName},NOW(),#{gender},#{zhiYe},#{address},#{phone});
+    </insert>
+
+    <!--根据id删除-->
+    <delete id="deletePesonById" parameterType="Long">
+        DELETE FROM persons WHERE id = #{0}
+    </delete>
+
+    <!--查詢所有-->
+    <select id="findAllByPOJO" resultType="Person">
+        SELECT * FROM persons
+    </select>
+
+    <!--插入一条记录，使用Person实体类来封装参数信息-->
+    <insert id="insertPersonByPoJO" parameterType="Person">
+        INSERT INTO `persons` VALUES(NULL,#{uName},NOW(),#{gender},#{zhiYe},#{address},#{phone});
+    </insert>
+
+    <!--使用insert标签调用存储过程-->
+    <insert id="insertManyUsersByCallable" parameterType="Map" statementType="CALLABLE">
+        call pro_insert(
+            #{num,mode=IN,jdbcType=INTEGER}
+        );
+    </insert>
+
+
+
+    <!--使用select标签调用存储过程-->
+    <select id="getInfoByUName" parameterType="Map" statementType="CALLABLE">
+        call pro_findByUName(
+          #{p1,mode=IN,jdbcType=VARCHAR},
+          #{rs1,mode=OUT,jdbcType=VARCHAR},
+          #{rs2,mode=OUT,jdbcType=VARCHAR}
+        );
+    </select>
+</mapper>

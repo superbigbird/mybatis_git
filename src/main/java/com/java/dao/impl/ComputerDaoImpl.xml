@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java.dao.impl.ComputerDaoImpl">
+
+    <!--动态sql查询1-->
+	<select id="dynamicSelect1" parameterType="Map" resultType="Map">
+        SELECT * FROM `computers`
+        <where>
+            <if test="brand!=null and brand!=''">
+                AND brand=#{brand}
+            </if>
+            <if test="price!=null and price!=''">
+                AND price &lt; =#{price}
+            </if>
+            <if test="rumMem!=null and rumMem!=''">
+                AND rumMem=#{runMem}
+            </if>
+            <if test="cpu!=null and cpu!=''">
+                AND cpu=#{cpu}
+            </if>
+            <if test="xianKa!=null and xianKa!=''">
+                AND xianKa=#{xianKa}
+            </if>
+        </where>
+	</select>
+
+    <!--动态sql查询2,通过trim+if
+        trim标签：
+            prefix：在条件之前添加一个指定的字符串
+            prefixOverrides：在条件之前遇到多余的指定字符串则自动去除
+            suffix：在条件之后添加一个指定的字符串
+            suffixOverrides：在条件之后遇到多余的指定字符串则自动去除
+    -->
+    <select id="dynamicSelect2" parameterType="Map" resultType="Map">
+        SELECT * FROM `computers`
+            <trim prefix="WHERE" suffixOverrides="AND">
+                <if test="brand!=null and brand!=''">
+                    brand=#{brand} AND
+                </if>
+                <if test="price!=null and price!=''">
+                    price &lt; =#{price} AND
+                </if>
+                <if test="rumMem!=null and rumMem!=''">
+                    rumMem=#{runMem} AND
+                </if>
+                <if test="cpu!=null and cpu!=''">
+                    cpu=#{cpu} AND
+                </if>
+                <if test="xianKa!=null and xianKa!=''">
+                    xianKa=#{xianKa}
+                </if>
+            </trim>
+    </select>
+
+    <!--动态修改1-->
+    <update id="dynamicUpdate1" parameterType="Map">
+        UPDATE `computers`
+        <set>
+            <if test="brand!=null and brand!=''">
+                brand=#{brand},
+            </if>
+            <if test="price!=null and price!=''">
+                price =#{price},
+            </if>
+            <if test="rumMem!=null and rumMem!=''">
+                rumMem=#{runMem},
+            </if>
+            <if test="cpu!=null and cpu!=''">
+                cpu=#{cpu},
+            </if>
+            <if test="xianKa!=null and xianKa!=''">
+                xianKa=#{xianKa},
+            </if>
+            id=#{id}
+        </set>
+        WHERE id = #{id};
+    </update>
+
+    <!--动态修改2-->
+    <update id="dynamicUpdate2" parameterType="Map">
+        UPDATE `computers`
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brand!=null and brand!=''">
+                brand=#{brand},
+            </if>
+            <if test="price!=null and price!=''">
+                price =#{price},
+            </if>
+            <if test="rumMem!=null and rumMem!=''">
+                rumMem=#{runMem},
+            </if>
+            <if test="cpu!=null and cpu!=''">
+                cpu=#{cpu},
+            </if>
+            <if test="xianKa!=null and xianKa!=''">
+                xianKa=#{xianKa},
+            </if>
+            id=#{id}
+        </trim>
+        WHERE id = #{id};
+    </update>
+
+    <select id="selectByIfElse" resultType="Map" parameterType="Map">
+        <choose>
+            <when test="status==1">
+                SELECT *  FROM `computers` WHERE `status` = '1'
+            </when>
+            <otherwise>
+                SELECT id,brand FROM computers WHERE `status`='0'
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

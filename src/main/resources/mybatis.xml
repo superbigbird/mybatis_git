@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <!--
+            typeAlias标签：配置别名
+                type属性：指定实体类的全路径
+                alias属性：别名
+        -->
+        <typeAlias type="com.java.pojo.Person" alias="Person"></typeAlias>
+    </typeAliases>
+    <!--配置pageHelper的拦截器-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"></property>
+        </plugin>
+    </plugins>
+
+    <!--配置环境-->
+    <environments default="p6spy">
+        <environment id="mysql">
+            <!--指定事务-->
+            <transactionManager type="JDBC"></transactionManager>
+            <!--数据源：driver、url、username、password-->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"></property>
+                <property name="url" value="jdbc:mysql:///person_info"></property>
+                <property name="username" value="root"></property>
+                <property name="password" value="root"></property>
+            </dataSource>
+        </environment>
+
+        <environment id="p6spy">
+            <!--指定事务-->
+            <transactionManager type="JDBC"></transactionManager>
+            <!--数据源：driver、url、username、password-->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.p6spy.engine.spy.P6SpyDriver"></property>
+                <property name="url" value="jdbc:p6spy:mysql:///person_info"></property>
+                <property name="username" value="root"></property>
+                <property name="password" value="root"></property>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--在主配置文件中关联局部配置文件-->
+    <mappers>
+        <mapper resource="com\java\dao\impl\PersonDaoImpl.xml"></mapper>
+        <mapper resource="com\java\dao\impl\BookDaoImpl.xml"></mapper>
+        <mapper resource="com\java\dao\impl\ComputerDaoImpl.xml"></mapper>
+        <mapper resource="com\java\dao\impl\One2OneImpl.xml"></mapper>
+    </mappers>
+</configuration>
